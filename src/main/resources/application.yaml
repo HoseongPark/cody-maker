@@ -1,0 +1,9 @@
+server:
+  port: 18080
+
+spring:
+  application:
+    name: commerce
+
+  jpa:
+    open-in-view: false

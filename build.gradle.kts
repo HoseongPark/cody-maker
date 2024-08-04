@@ -42,6 +42,7 @@ dependencies {
     testImplementation("io.kotest:kotest-property:5.9.1")
     testImplementation("io.kotest.extensions:kotest-extensions-spring:1.3.0")
     testImplementation("io.mockk:mockk:1.13.12")
+    testImplementation("com.ninja-squad:springmockk:4.0.2") // mockk 모킹용 라이브러리를 Spring에서 사용하기 위한 라이브러리
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")

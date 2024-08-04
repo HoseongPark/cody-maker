@@ -11,7 +11,7 @@ class Brand(name: String, deleted: Boolean) : BaseEntity() {
 
     var deleted: Boolean = deleted
 
-    fun updateBrand(name: String?) {
+    fun update(name: String?) {
         name?.let { this.name = it }
     }
 

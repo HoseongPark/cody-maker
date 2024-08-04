@@ -25,7 +25,7 @@ class BrandTest(private val jpaInfra: BrandJpaInfra) : BehaviorSpec({
             val brand = Brand("Nike", true)
             val savedBrand = brandRepository.save(brand)
 
-            savedBrand.updateBrand("Adidas")
+            savedBrand.update("Adidas")
 
             Then("브랜드 정보가 수정 된다.") {
                 savedBrand.name shouldBe "Adidas"

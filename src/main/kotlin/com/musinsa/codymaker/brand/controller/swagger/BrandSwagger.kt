@@ -41,4 +41,19 @@ interface BrandSwagger {
         )
     )
     fun updateBrand(id: Long, updateRequest: BrandUpdateReq): ResponseEntity<BrandUpdateRes>
+
+    @Tag(name = "Brand")
+    @Operation(summary = "브랜드 삭제", description = "브랜드를 삭제 합니다.")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "OK"),
+        ApiResponse(
+            responseCode = "404", description = "Not Found Error",
+            content = [Content(schema = Schema(implementation = ApiErrorRes::class))]
+        ),
+        ApiResponse(
+            responseCode = "500", description = "Internal Server Error",
+            content = [Content(schema = Schema(implementation = ApiErrorRes::class))]
+        )
+    )
+    fun deleteBrand(id: Long): ResponseEntity<Unit>
 }

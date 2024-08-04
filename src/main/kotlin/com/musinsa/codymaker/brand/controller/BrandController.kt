@@ -33,4 +33,10 @@ class BrandController(private val brandService: BrandService) : BrandSwagger {
         return ResponseEntity.ok().body(response)
     }
 
+    @DeleteMapping("/{brand-id}")
+    override fun deleteBrand(@PathVariable("brand-id") id: Long): ResponseEntity<Unit> {
+        brandService.deleteBrand(id)
+        return ResponseEntity.ok().build()
+    }
+
 }

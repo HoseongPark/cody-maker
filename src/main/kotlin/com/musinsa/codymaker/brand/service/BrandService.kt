@@ -34,7 +34,7 @@ class BrandService(private val brandRepo: BrandRepository) {
     @Transactional
     fun updateBrand(id: Long, req: BrandUpdateReq): Long {
         val brand = brandRepo.getById(id)
-        brand.updateBrand(req.name, req.deleted)
+        brand.updateBrand(req.name)
 
         // update 로직이 오류 없이 진행 되었을 경우 해당 ID는 항상 존재한다.
         return brand.id!!

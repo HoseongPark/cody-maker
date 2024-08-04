@@ -50,7 +50,7 @@ class BrandServiceTest(private val jpaInfra: BrandJpaInfra) : BehaviorSpec({
         When("정상적으로 수정이 되었을 때") {
             val saveBrand = brandRepo.save(Brand("Nike", true))
 
-            val brandUpdateReq = BrandUpdateReq("ABC", false)
+            val brandUpdateReq = BrandUpdateReq("ABC")
             val updateBrandId = brandService.updateBrand(saveBrand.id!!, brandUpdateReq)
 
             Then("브랜드 ID를 반환 한다.") {
@@ -61,7 +61,7 @@ class BrandServiceTest(private val jpaInfra: BrandJpaInfra) : BehaviorSpec({
         When("수정 하려는 브랜드가 존재하지 않았을 때") {
             brandRepo.save(Brand("Nike", true))
 
-            val brandUpdateReq = BrandUpdateReq("ABC", false)
+            val brandUpdateReq = BrandUpdateReq("ABC")
             val exception = shouldThrow<RuntimeException> { brandService.updateBrand(30L, brandUpdateReq) }
 
             Then("예외를 발생시킨다.") {

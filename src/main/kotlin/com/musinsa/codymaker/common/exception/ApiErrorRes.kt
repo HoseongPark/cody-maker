@@ -5,5 +5,6 @@ import java.time.LocalDateTime
 
 data class ApiErrorRes(
     val message: String?,
+    val details: List<String>? = null,
     val time: LocalDateTime = getUtcNow()
 )

@@ -5,6 +5,9 @@ import jakarta.persistence.Entity
 
 @Entity
 class Brand(name: String, deleted: Boolean) : BaseEntity() {
+
+    // 브랜드 이름은 중복되지 않은 유일한 이름이라고 가정한다.
     var name: String = name
-    var delete: Boolean = deleted
+
+    var deleted: Boolean = deleted
 }

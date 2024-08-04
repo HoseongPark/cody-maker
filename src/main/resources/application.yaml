@@ -5,6 +5,11 @@ springdoc:
   swagger-ui:
     path: /docs
 
+  # Request, Response 기본 Media Type 설정
+  # API별 설정이 필요할 경우 각 API 메소드에서 Media Type을 설정해야 합니다.
+  default-consumes-media-type: application/json; charset=UTF-8
+  default-produces-media-type: application/json; charset=UTF-8
+
 spring:
   application:
     name: commerce

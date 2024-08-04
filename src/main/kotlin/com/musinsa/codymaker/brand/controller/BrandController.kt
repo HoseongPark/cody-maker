@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/brand")
-class BrandController(private val brandService: BrandService) : BrandSwagger {
+class BrandController(private val brandSvc: BrandService) : BrandSwagger {
 
     @PostMapping
     override fun saveBrand(@Valid @RequestBody saveRequest: BrandSaveReq): ResponseEntity<BrandSaveRes> {
-        val brandId = brandService.saveBrand(saveRequest)
+        val brandId = brandSvc.saveBrand(saveRequest)
         val response = BrandSaveRes(brandId)
 
         return ResponseEntity.ok().body(response)
@@ -27,7 +27,7 @@ class BrandController(private val brandService: BrandService) : BrandSwagger {
         @PathVariable("brand-id") id: Long,
         @RequestBody updateRequest: BrandUpdateReq
     ): ResponseEntity<BrandUpdateRes> {
-        val brandId = brandService.updateBrand(id, updateRequest)
+        val brandId = brandSvc.updateBrand(id, updateRequest)
         val response = BrandUpdateRes(brandId)
 
         return ResponseEntity.ok().body(response)
@@ -35,7 +35,7 @@ class BrandController(private val brandService: BrandService) : BrandSwagger {
 
     @DeleteMapping("/{brand-id}")
     override fun deleteBrand(@PathVariable("brand-id") id: Long): ResponseEntity<Unit> {
-        brandService.deleteBrand(id)
+        brandSvc.deleteBrand(id)
         return ResponseEntity.ok().build()
     }
 

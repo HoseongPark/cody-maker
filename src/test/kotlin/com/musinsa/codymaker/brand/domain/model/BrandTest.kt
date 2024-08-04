@@ -34,4 +34,17 @@ class BrandTest(private val jpaInfra: BrandJpaInfra) : BehaviorSpec({
         }
     }
 
+    Given("브랜드 삭제") {
+        When("브랜드 삭제 메소드가 호출 되면") {
+            val brand = Brand("Nike", false)
+            val savedBrand = brandRepository.save(brand)
+
+            savedBrand.delete()
+
+            Then("브랜드 삭제 여부가 true로 변경 된다.") {
+                savedBrand.deleted shouldBe true
+            }
+        }
+    }
+
 })

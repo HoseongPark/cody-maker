@@ -15,4 +15,8 @@ class Brand(name: String, deleted: Boolean) : BaseEntity() {
         name?.let { this.name = it }
     }
 
+    fun delete() {
+        this.deleted = true
+    }
+
 }

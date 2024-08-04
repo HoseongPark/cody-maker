@@ -20,7 +20,7 @@ class BrandService(private val brandRepo: BrandRepository) {
     @Transactional
     fun saveBrand(req: BrandSaveReq): Long {
         // 브랜드 등록시 활성화 상태로 등록
-        val brand = Brand(req.name, true)
+        val brand = Brand(req.name, false)
         val savedBrand = brandRepo.save(brand)
 
         // save 로직이 오류 없이 진행 되었을 경우 해당 ID는 항상 존재한다.
@@ -34,9 +34,15 @@ class BrandService(private val brandRepo: BrandRepository) {
     @Transactional
     fun updateBrand(id: Long, req: BrandUpdateReq): Long {
         val brand = brandRepo.getById(id)
-        brand.updateBrand(req.name)
+        brand.update(req.name)
 
         // update 로직이 오류 없이 진행 되었을 경우 해당 ID는 항상 존재한다.
         return brand.id!!
+    }
+
+    @Transactional
+    fun deleteBrand(id: Long) {
+        val brand = brandRepo.getById(id)
+        brand.delete()
     }
 }

@@ -34,7 +34,7 @@ class ProductServiceTest(
     val productSvc = ProductService(productRepo, brandRepo)
 
     Given("브랜드가 저장되어 있고, 상품 정보가 주어지면") {
-        val brand = Brand("Nike", false)
+        val brand = Brand("Nike")
         val savedBrand = brandRepo.save(brand)
 
         val saveReq = ProductSaveReq(brandId = savedBrand.id!!, category = "TOP", price = 100_000)
@@ -54,7 +54,7 @@ class ProductServiceTest(
                 productSvc.saveProduct(productSaveReq)
             }
 
-            Then("예외를 반환 한다.") {
+            Then("NotFoundException 예외가 발생한다") {
                 exception.shouldBeInstanceOf<NotFoundException>()
             }
         }
@@ -80,9 +80,29 @@ class ProductServiceTest(
                 productSvc.updateProduct(30L, productUpdateReq)
             }
 
-            Then("NotFoundException 예외를 발생시킨다.") {
+            Then("NotFoundException 예외가 발생한다") {
+                exception.shouldBeInstanceOf<NotFoundException>()
+            }
+        }
+
+        When("삭제하면") {
+            productSvc.deleteProduct(savedProduct.id!!)
+
+            Then("상품의 삭제 상태가 true로 변경된다.") {
+                val getProduct = productRepo.getById(savedProduct.id!!)
+                getProduct.deleted shouldBe true
+            }
+        }
+
+        When("삭제하려는 상품이 존재하지 않으면") {
+            val exception = shouldThrow<NotFoundException> {
+                productSvc.deleteProduct(55L)
+            }
+
+            Then("NotFoundException 예외가 발생한다") {
                 exception.shouldBeInstanceOf<NotFoundException>()
             }
         }
     }
+
 })

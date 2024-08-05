@@ -8,8 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -92,5 +91,21 @@ class ProductControllerTest(
             }
         }
 
+    }
+
+    Given("상품 삭제 ID가 주어지고") {
+        every { productSvc.deleteProduct(any()) } returns Unit
+
+        When("삭제 API를 요청하면") {
+            val perform = mockMvc.perform(
+                delete("/product/1")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+
+            Then("200 Status를 반환한다") {
+                perform
+                    .andExpect(status().isOk)
+            }
+        }
     }
 })

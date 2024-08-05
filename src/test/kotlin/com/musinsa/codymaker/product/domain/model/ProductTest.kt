@@ -55,5 +55,13 @@ class ProductTest(private val productJpaInfra: ProductJpaInfra) : BehaviorSpec({
                 savedProduct.price shouldBe 10000
             }
         }
+
+        When("상품을 삭제 하면") {
+            savedProduct.delete()
+
+            Then("삭제 상태가 true로 변경 된다.") {
+                savedProduct.deleted shouldBe true
+            }
+        }
     }
 })

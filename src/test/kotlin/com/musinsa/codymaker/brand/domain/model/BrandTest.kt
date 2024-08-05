@@ -17,7 +17,7 @@ class BrandTest(private val jpaInfra: BrandJpaInfra) : BehaviorSpec({
     val brandRepository = BrandRepository(jpaInfra)
 
     Given("브랜드가 저장되어 있고") {
-        val brand = Brand("Nike", false)
+        val brand = Brand("Nike")
         val savedBrand = brandRepository.save(brand)
 
         When("이름을 수정 하면") {

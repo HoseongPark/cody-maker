@@ -17,20 +17,20 @@ class BrandRepositoryTest (private val jpaInfra: BrandJpaInfra) : BehaviorSpec({
     val brandRepository = BrandRepository(jpaInfra)
 
     Given("브랜드 정보가 주어지고") {
-        val brand = Brand("Nike", true)
+        val brand = Brand("Nike")
 
         When("저장이 되면") {
             val savedBrand = brandRepository.save(brand)
 
             Then("브랜드의 정보를 알 수 있다") {
                 savedBrand.name shouldBe "Nike"
-                savedBrand.deleted shouldBe true
+                savedBrand.deleted shouldBe false
             }
         }
     }
 
     Given("브랜드가 저장되어 있고") {
-        val brand = Brand("Adidas", true)
+        val brand = Brand("Adidas")
         val savedBrand = brandRepository.save(brand)
 
         When("조회 하면") {
@@ -38,7 +38,7 @@ class BrandRepositoryTest (private val jpaInfra: BrandJpaInfra) : BehaviorSpec({
 
             Then("브랜드의 정보를 알 수 있다.") {
                 foundBrand.name shouldBe "Adidas"
-                foundBrand.deleted shouldBe true
+                foundBrand.deleted shouldBe false
             }
         }
 

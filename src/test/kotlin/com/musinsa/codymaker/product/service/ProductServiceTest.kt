@@ -5,11 +5,15 @@ import com.musinsa.codymaker.brand.domain.model.Brand
 import com.musinsa.codymaker.brand.domain.repository.BrandRepository
 import com.musinsa.codymaker.common.exception.NotFoundException
 import com.musinsa.codymaker.product.controller.model.ProductSaveReq
+import com.musinsa.codymaker.product.controller.model.ProductUpdateReq
 import com.musinsa.codymaker.product.domain.infra.ProductJpaInfra
+import com.musinsa.codymaker.product.domain.model.Category
+import com.musinsa.codymaker.product.domain.model.Product
 import com.musinsa.codymaker.product.domain.repository.ProductRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
@@ -56,4 +60,29 @@ class ProductServiceTest(
         }
     }
 
+    Given("상품이 저장되어 있고") {
+        val product = Product(brandId = 1L, Category.HAT, 10000)
+        val savedProduct = productRepo.save(product)
+
+        When("수정하면") {
+            val productUpdateReq = ProductUpdateReq("BOTTOM", 20000)
+            val updateProductId = productSvc.updateProduct(savedProduct.id!!, productUpdateReq)
+
+            Then("상품 ID를 반환 한다.") {
+                savedProduct.id shouldBe updateProductId
+            }
+        }
+
+        When("수정 하려는 상품이 존재하지 않으면") {
+            val productUpdateReq = ProductUpdateReq("BOTTOM", 20000)
+
+            val exception = shouldThrow<NotFoundException> {
+                productSvc.updateProduct(30L, productUpdateReq)
+            }
+
+            Then("NotFoundException 예외를 발생시킨다.") {
+                exception.shouldBeInstanceOf<NotFoundException>()
+            }
+        }
+    }
 })

@@ -2,6 +2,7 @@ package com.musinsa.codymaker.product.service
 
 import com.musinsa.codymaker.brand.domain.repository.BrandRepository
 import com.musinsa.codymaker.product.controller.model.ProductSaveReq
+import com.musinsa.codymaker.product.controller.model.ProductUpdateReq
 import com.musinsa.codymaker.product.domain.model.Category
 import com.musinsa.codymaker.product.domain.model.Product
 import com.musinsa.codymaker.product.domain.repository.ProductRepository
@@ -36,6 +37,19 @@ class ProductService(
 
         // 저장시 예외가 발생하지 않았다면 ID는 무조건 존재
         return savedProduct.id!!
+    }
+
+    @Transactional
+    fun updateProduct(id: Long, req: ProductUpdateReq): Long {
+        val product = productRepo.getById(id)
+
+        product.update(
+            category = req.category?.let { Category.from(it) },
+            price = req.price
+        )
+
+        // 조회 및 수정시 예외가 발생하지 않았다면 ID는 무조건 존재
+        return product.id!!
     }
 
 }

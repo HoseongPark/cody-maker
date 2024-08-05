@@ -6,12 +6,12 @@ import com.musinsa.codymaker.common.exception.NotFoundException
 import org.springframework.stereotype.Repository
 
 @Repository
-class BrandRepository(private val jpaInfra: BrandJpaInfra) {
+class BrandRepository(private val brandJpaInfra: BrandJpaInfra) {
 
-    fun save(brand: Brand): Brand = jpaInfra.save(brand)
+    fun save(brand: Brand): Brand = brandJpaInfra.save(brand)
 
     fun getById(id: Long): Brand {
-        val brand = jpaInfra.findById(id).orElseThrow { throw NotFoundException("Brand not found") }
+        val brand = brandJpaInfra.findById(id).orElseThrow { throw NotFoundException("Brand not found") }
         return brand
     }
 }

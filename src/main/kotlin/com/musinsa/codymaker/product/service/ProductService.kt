@@ -39,6 +39,10 @@ class ProductService(
         return savedProduct.id!!
     }
 
+    /**
+     * 상품 수정 이후 사용되어야 필드에 대해 명시 되어 있지 않아.
+     * 수정된 브랜드의 ID를 반환 하도록 구성.
+     */
     @Transactional
     fun updateProduct(id: Long, req: ProductUpdateReq): Long {
         val product = productRepo.getById(id)
@@ -50,6 +54,13 @@ class ProductService(
 
         // 조회 및 수정시 예외가 발생하지 않았다면 ID는 무조건 존재
         return product.id!!
+    }
+
+    @Transactional
+    fun deleteProduct(id: Long) {
+        val product = productRepo.getById(id)
+        product.delete()
+        productRepo.save(product)
     }
 
 }

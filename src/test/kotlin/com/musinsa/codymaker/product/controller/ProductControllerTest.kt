@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -65,5 +66,31 @@ class ProductControllerTest(
                     .andExpect(status().isBadRequest)
             }
         }
+    }
+
+    Given("유효한 상품 수정 정보가 주어지고") {
+        every { productSvc.updateProduct(any(), any()) } returns 1L
+
+        val requestJson = """
+                {
+                    "category": "TOP",
+                    "price": 100000
+                }
+            """.trimIndent()
+
+        When("수정 API를 요청하면") {
+            val perform = mockMvc.perform(
+                patch("/product/1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(requestJson)
+            )
+
+            Then("200 Status와, 상품 ID를 반환한다") {
+                perform
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("$.id").value(1))
+            }
+        }
+
     }
 })

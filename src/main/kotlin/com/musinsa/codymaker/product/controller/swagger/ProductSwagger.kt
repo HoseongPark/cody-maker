@@ -45,4 +45,19 @@ interface ProductSwagger {
         )
     )
     fun updateProduct(id: Long, updateRequest: ProductUpdateReq): ResponseEntity<ProductUpdateRes>
+
+    @Tag(name = "Product")
+    @Operation(summary = "상품 삭제", description = "상품을 삭제 합니다.")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "OK"),
+        ApiResponse(
+            responseCode = "404", description = "Not Found Error",
+            content = [Content(schema = Schema(implementation = ApiErrorRes::class))]
+        ),
+        ApiResponse(
+            responseCode = "500", description = "Internal Server Error",
+            content = [Content(schema = Schema(implementation = ApiErrorRes::class))]
+        )
+    )
+    fun deleteProduct(id: Long): ResponseEntity<Unit>
 }

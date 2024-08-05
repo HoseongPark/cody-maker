@@ -33,4 +33,11 @@ class ProductController(private val productSvc: ProductService) : ProductSwagger
         return ResponseEntity.ok().body(response)
     }
 
+    @DeleteMapping("/{product-id}")
+    override fun deleteProduct(@PathVariable("product-id") id: Long): ResponseEntity<Unit> {
+        productSvc.deleteProduct(id)
+
+        return ResponseEntity.ok().build()
+    }
+
 }

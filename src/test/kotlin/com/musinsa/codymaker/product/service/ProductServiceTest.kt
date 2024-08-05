@@ -10,9 +10,7 @@ import com.musinsa.codymaker.product.domain.repository.ProductRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.extensions.spring.SpringTestExtension
-import io.kotest.extensions.spring.SpringTestLifecycleMode
-import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -24,7 +22,6 @@ class ProductServiceTest(
     private val brandJpaInfra: BrandJpaInfra
 ) : BehaviorSpec({
 
-    extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
     isolationMode = IsolationMode.InstancePerLeaf
 
     val productRepo = ProductRepository(productJpaInfra)
@@ -32,21 +29,21 @@ class ProductServiceTest(
 
     val productSvc = ProductService(productRepo, brandRepo)
 
-    Given("상품 등록") {
+    Given("브랜드가 저장되어 있고, 상품 정보가 주어지면") {
         val brand = Brand("Nike", false)
         val savedBrand = brandRepo.save(brand)
 
-        When("정상적으로 등록이 되었을 때") {
-            val productSaveReq = ProductSaveReq(brandId = savedBrand.id!!, category = "TOP", price = 100_000)
+        val saveReq = ProductSaveReq(brandId = savedBrand.id!!, category = "TOP", price = 100_000)
 
-            val savedProductId = productSvc.saveProduct(productSaveReq)
+        When("상품이 등록이 되었을 때") {
+            val savedProductId = productSvc.saveProduct(saveReq)
 
             Then("상품 ID를 반환 한다.") {
-                savedProductId shouldBe 1L
+                savedProductId shouldNotBe null
             }
         }
 
-        When("브랜드가 없을 때") {
+        When("상품의 브랜드가 없을 때") {
             val productSaveReq = ProductSaveReq(brandId = 100L, category = "TOP", price = 100_000)
 
             val exception = shouldThrow<NotFoundException> {

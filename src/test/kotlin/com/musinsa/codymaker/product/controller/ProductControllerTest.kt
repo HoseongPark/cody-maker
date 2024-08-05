@@ -2,9 +2,7 @@ package com.musinsa.codymaker.product.controller
 
 import com.musinsa.codymaker.product.service.ProductService
 import com.ninjasquad.springmockk.MockkBean
-import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.extensions.spring.SpringExtension
 import io.mockk.every
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -20,12 +18,10 @@ class ProductControllerTest(
     @MockkBean private val productSvc: ProductService
 ) : BehaviorSpec({
 
-    isolationMode = IsolationMode.InstancePerLeaf
-    extensions(listOf(SpringExtension))
+    Given("유효한 상품 정보가 주어지고") {
+        every { productSvc.saveProduct(any()) } returns 1L
 
-    Given("상품 등록 API 요청시") {
-        When("유효한 상품 정보가 전달되면") {
-            val requestJson = """
+        val requestJson = """
                 {
                     "brandId": 1,
                     "category": "TOP",
@@ -33,8 +29,7 @@ class ProductControllerTest(
                 }
             """.trimIndent()
 
-            every { productSvc.saveProduct(any()) } returns 1L
-
+        When("등록 API를 요청하면") {
             val perform = mockMvc.perform(
                 post("/product")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -47,9 +42,10 @@ class ProductControllerTest(
                     .andExpect(jsonPath("$.id").value(1))
             }
         }
+    }
 
-        When("유효 하지 않은 상품 정보가 전달 되면") {
-            val requestJson = """
+    Given("유효하지 않은 상품 정보가 주어지고") {
+        val requestJson = """
                 {
                     "brandId": 1,
                     "category": "TEST",
@@ -57,7 +53,7 @@ class ProductControllerTest(
                 }
             """.trimIndent()
 
-
+        When("등록 API를 요청하면") {
             val perform = mockMvc.perform(
                 post("/product")
                     .contentType(MediaType.APPLICATION_JSON)

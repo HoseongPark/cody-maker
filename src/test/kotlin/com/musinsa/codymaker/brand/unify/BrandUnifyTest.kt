@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.musinsa.codymaker.brand.controller.model.BrandSaveReq
 import com.musinsa.codymaker.brand.controller.model.BrandUpdateReq
 import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.extensions.spring.SpringExtension
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -22,12 +21,10 @@ class BrandUnifyTest(
     @Autowired objectMapper: ObjectMapper
 ) : BehaviorSpec({
 
-    extensions(listOf(SpringExtension))
+    Given("브랜드 정보가 주어지고") {
+        val saveReq = BrandSaveReq("Nike")
 
-    Given("브랜드 저장 요청이 주어지고") {
-        When("요청 값이 정상이면") {
-            val saveReq = BrandSaveReq("Nike")
-
+        When("등록하면") {
             val perform = mockMvc.perform(
                 post("/brand")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -39,10 +36,12 @@ class BrandUnifyTest(
                     .andExpect(status().isOk)
             }
         }
+    }
 
-        When("요청의 값이 잘못되면") {
-            val brandSaveReq = BrandSaveReq("")
+    Given("잘못된 브랜드 정보가 주어지고") {
+        val brandSaveReq = BrandSaveReq("")
 
+        When("등록하면") {
             val perform = mockMvc.perform(
                 post("/brand")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -56,7 +55,7 @@ class BrandUnifyTest(
         }
     }
 
-    Given("수정 요청이 주어지고") {
+    Given("수정 정보가 주어지고") {
         val saveReq = BrandSaveReq("Nike")
 
         mockMvc.perform(
@@ -65,9 +64,9 @@ class BrandUnifyTest(
                 .content(objectMapper.writeValueAsString(saveReq))
         )
 
-        When("요청 값이 정상이면") {
-            val updateReq = BrandUpdateReq(name = "Nike")
+        val updateReq = BrandUpdateReq(name = "Nike")
 
+        When("수정하면") {
             val perform = mockMvc.perform(
                 patch("/brand/1")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -81,9 +80,7 @@ class BrandUnifyTest(
             }
         }
 
-        When("존재하지 않는 브랜드를 수정하려고 하면") {
-            val updateReq = BrandUpdateReq(name = "Nike")
-
+        When("존재하지 않는 브랜드를 수정하면") {
             val perform = mockMvc.perform(
                 patch("/brand/32")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -96,4 +93,5 @@ class BrandUnifyTest(
             }
         }
     }
+
 })

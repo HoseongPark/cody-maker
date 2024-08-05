@@ -1,13 +1,13 @@
 package com.musinsa.codymaker.product.domain.repository
 
+import com.musinsa.codymaker.common.exception.NotFoundException
 import com.musinsa.codymaker.product.domain.infra.ProductJpaInfra
 import com.musinsa.codymaker.product.domain.model.Category.TOP
 import com.musinsa.codymaker.product.domain.model.Product
-import io.kotest.core.spec.IsolationMode
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.extensions.spring.SpringTestExtension
-import io.kotest.extensions.spring.SpringTestLifecycleMode
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 
@@ -15,15 +15,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ProductRepositoryTest(private val productJpaInfra: ProductJpaInfra) : BehaviorSpec({
 
-    extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
-    isolationMode = IsolationMode.InstancePerLeaf
-
     val productRepository = ProductRepository(productJpaInfra)
 
-    Given("상품 저장 요청이 주어지고") {
-        When("상품 도메인이 저장이 되면") {
-            val product = Product(1L, TOP, 100_000)
+    Given("상품이 주어지고") {
+        val product = Product(1L, TOP, 100_000)
 
+        When("상품이 저장이 되면") {
             val savedProduct = productRepository.save(product)
 
             Then("상품의 정보를 알 수 있다.") {
@@ -33,6 +30,33 @@ class ProductRepositoryTest(private val productJpaInfra: ProductJpaInfra) : Beha
                 savedProduct.price shouldBe 100_000
             }
         }
+    }
+
+    Given("상품이 저장되어 있고") {
+        val product = Product(1L, TOP, 100_000)
+        val savedProduct = productRepository.save(product)
+
+        When("존재하는 상품의 정보를 조회 하면") {
+            val findProduct = productRepository.getById(savedProduct.id!!)
+
+            Then("상품의 정보를 알 수 있다.") {
+                findProduct.id shouldBe savedProduct.id
+                findProduct.brandId shouldBe 1L
+                findProduct.category shouldBe TOP
+                findProduct.price shouldBe 100_000
+            }
+        }
+
+        When("존재하지 않는 상품의 정보를 조회 하면") {
+            val exception = shouldThrow<NotFoundException> {
+                productRepository.getById(100000L)
+            }
+
+            Then("예외가 발생한다.") {
+                exception.shouldBeInstanceOf<NotFoundException>()
+            }
+        }
+
     }
 
 })

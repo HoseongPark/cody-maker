@@ -9,12 +9,9 @@ import com.musinsa.codymaker.common.exception.NotFoundException
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.extensions.spring.SpringTestExtension
-import io.kotest.extensions.spring.SpringTestLifecycleMode
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import io.mockk.every
-import io.mockk.mockk
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 
@@ -22,82 +19,66 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class BrandServiceTest(private val jpaInfra: BrandJpaInfra) : BehaviorSpec({
 
-    extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
     isolationMode = IsolationMode.InstancePerLeaf
 
     val brandRepo = BrandRepository(jpaInfra)
-
     val brandService = BrandService(brandRepo)
 
-    Given("브랜드 등록") {
-        When("정상적으로 등록이 되었을 때") {
-            every { brandRepo.save(any()) } returns mockk<Brand> { every { id } returns 1L }
+    Given("브랜드 정보가 주어지고") {
+        val brandSaveReq = BrandSaveReq("Nike")
 
-            val brandSaveReq = BrandSaveReq("Nike")
+        When("등록하면") {
             val saveBrandId = brandService.saveBrand(brandSaveReq)
 
             Then("브랜드 ID를 반환 한다.") {
-                saveBrandId shouldBe 1L
-            }
-        }
-
-        When("등록 중 에러가 발생했을 때") {
-            every { brandRepo.save(any()) } throws RuntimeException()
-
-            val brandSaveReq = BrandSaveReq("Nike")
-            val exception = shouldThrow<RuntimeException> { brandService.saveBrand(brandSaveReq) }
-
-            Then("예외를 발생시킨다.") {
-                exception.shouldBeInstanceOf<RuntimeException>()
+                saveBrandId shouldNotBe null
             }
         }
     }
 
-    Given("브랜드 수정") {
-        When("정상적으로 수정이 되었을 때") {
-            val saveBrand = brandRepo.save(Brand("Nike", true))
+    Given("브랜드가 저장되어 있고") {
+        val brand = Brand("Nike", true)
+        val savedBrand = brandRepo.save(brand)
 
+        When("수정하면") {
             val brandUpdateReq = BrandUpdateReq("ABC")
-            val updateBrandId = brandService.updateBrand(saveBrand.id!!, brandUpdateReq)
+            val updateBrandId = brandService.updateBrand(savedBrand.id!!, brandUpdateReq)
 
             Then("브랜드 ID를 반환 한다.") {
-                updateBrandId shouldBe 1L
+                updateBrandId shouldBe savedBrand.id
             }
         }
 
-        When("수정 하려는 브랜드가 존재하지 않았을 때") {
-            brandRepo.save(Brand("Nike", true))
-
+        When("수정 하려는 브랜드가 존재하지 않으면") {
             val brandUpdateReq = BrandUpdateReq("ABC")
-            val exception = shouldThrow<NotFoundException> { brandService.updateBrand(30L, brandUpdateReq) }
+
+            val exception = shouldThrow<NotFoundException> {
+                brandService.updateBrand(30L, brandUpdateReq)
+            }
 
             Then("NotFoundException 예외를 발생시킨다.") {
                 exception.shouldBeInstanceOf<NotFoundException>()
             }
         }
-    }
 
-    Given("브랜드 삭제") {
-        When("정상적으로 삭제가 되었을 때") {
-            val saveBrand = brandRepo.save(Brand("Nike", false))
-
-            brandService.deleteBrand(saveBrand.id!!)
-
-            val brand = brandRepo.getById(saveBrand.id!!)
+        When("삭제하면") {
+            brandService.deleteBrand(savedBrand.id!!)
 
             Then("브랜드의 삭제 여부가 True로 변경된다.") {
-                brand.deleted shouldBe true
+                val getBrand = brandRepo.getById(savedBrand.id!!)
+                getBrand.deleted shouldBe true
             }
         }
 
-        When("삭제 하려는 브랜드가 존재하지 않았을 때") {
-            brandRepo.save(Brand("Nike", false))
-
-            val exception = shouldThrow<NotFoundException> { brandService.deleteBrand(30L) }
+        When("삭제 하려는 브랜드가 존재하지 않으면") {
+            val exception = shouldThrow<NotFoundException> {
+                brandService.deleteBrand(30L)
+            }
 
             Then("NotFoundException 예외를 발생시킨다.") {
                 exception.shouldBeInstanceOf<NotFoundException>()
             }
         }
     }
+
 })

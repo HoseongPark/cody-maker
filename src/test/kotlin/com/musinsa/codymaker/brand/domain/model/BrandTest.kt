@@ -21,14 +21,23 @@ class BrandTest(private val jpaInfra: BrandJpaInfra) : BehaviorSpec({
     val brandRepository = BrandRepository(jpaInfra)
 
     Given("브랜드 수정") {
-        When("브랜드 수정 메소드가 호출 되면") {
-            val brand = Brand("Nike", true)
-            val savedBrand = brandRepository.save(brand)
+        val brand = Brand("Nike", true)
+        val savedBrand = brandRepository.save(brand)
 
+        When("Name을 수정 하면") {
             savedBrand.update("Adidas")
 
-            Then("브랜드 정보가 수정 된다.") {
+            Then("브랜드 Name이 수정 된다.") {
                 savedBrand.name shouldBe "Adidas"
+                savedBrand.deleted shouldBe true
+            }
+        }
+
+        When("Name이 Null이면") {
+            savedBrand.update(null)
+
+            Then("브랜드 Name이 수정되지 않는다.") {
+                savedBrand.name shouldBe "Nike"
                 savedBrand.deleted shouldBe true
             }
         }

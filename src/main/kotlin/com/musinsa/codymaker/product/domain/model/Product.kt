@@ -19,4 +19,9 @@ class Product(brandId: Long, category: Category, price: Int) : BaseEntity() {
     var price: Int = price
         private set
 
+    fun update(category: Category? = null, price: Int? = null) {
+        category?.let { this.category = it }
+        price?.let { this.price = it }
+    }
+
 }

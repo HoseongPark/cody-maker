@@ -14,4 +14,9 @@ class BrandRepository(private val brandJpaInfra: BrandJpaInfra) {
         val brand = brandJpaInfra.findById(id).orElseThrow { throw NotFoundException("Brand not found") }
         return brand
     }
+
+    fun getByName(name: String): Brand {
+        val brand = brandJpaInfra.findByName(name) ?: throw NotFoundException("Brand not found")
+        return brand
+    }
 }

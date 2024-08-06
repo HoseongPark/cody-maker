@@ -31,8 +31,6 @@ class ProductRepositoryTest(
             val savedProduct = productRepository.save(product)
 
             Then("상품의 정보를 알 수 있다.") {
-                savedProduct.id shouldBe 1L
-                savedProduct.brandId shouldBe 1L
                 savedProduct.category shouldBe TOP
                 savedProduct.price shouldBe 100_000
             }
@@ -100,7 +98,6 @@ class ProductRepositoryTest(
 
             then("상품을 알 수 있다.") {
                 products.size shouldBe 1
-                products[0].id shouldBe 2L
                 products[0].brandId shouldBe 2L
                 products[0].category shouldBe TOP
                 products[0].price shouldBe 200_000

@@ -1,21 +1,28 @@
 package com.musinsa.codymaker.product.domain.model
 
+import com.musinsa.codymaker.common.config.QueryDslConfig
 import com.musinsa.codymaker.product.domain.infra.ProductJpaInfra
 import com.musinsa.codymaker.product.domain.repository.ProductRepository
+import com.querydsl.jpa.impl.JPAQueryFactory
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.context.annotation.Import
 
 
 @DataJpaTest
+@Import(QueryDslConfig::class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class ProductTest(private val productJpaInfra: ProductJpaInfra) : BehaviorSpec({
+class ProductTest(
+    private val productJpaInfra: ProductJpaInfra,
+    private val queryFactory: JPAQueryFactory
+) : BehaviorSpec({
 
     isolationMode = IsolationMode.InstancePerLeaf
 
-    val productRepository = ProductRepository(productJpaInfra)
+    val productRepository = ProductRepository(productJpaInfra, queryFactory)
 
     Given("상품이 저장 되어 있고") {
         val product = Product(1, Category.TOP, 10000)

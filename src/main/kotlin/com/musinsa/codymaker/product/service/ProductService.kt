@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class ProductService(
     private val productRepo: ProductRepository,
-    private val brandRepo: BrandRepository
+    private val brandRepo: BrandRepository,
 ) {
 
     /**

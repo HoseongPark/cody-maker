@@ -22,15 +22,21 @@ class ApiExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError)
     }
 
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handIllegalArgumentException(ex: IllegalArgumentException): ResponseEntity<ApiErrorRes> {
+        val apiError = ApiErrorRes(ex.message)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError)
+    }
+
     @ExceptionHandler(NotFoundException::class)
     fun handleNotFoundException(ex: NotFoundException): ResponseEntity<ApiErrorRes> {
-        val apiErrorRes = ApiErrorRes(ex.message)
-        return ResponseEntity.status(NOT_FOUND).body(apiErrorRes)
+        val apiError = ApiErrorRes(ex.message)
+        return ResponseEntity.status(NOT_FOUND).body(apiError)
     }
 
     @ExceptionHandler(Exception::class)
     fun handleException(ex: Exception): ResponseEntity<ApiErrorRes> {
-        val apiErrorRes = ApiErrorRes(ex.message)
-        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(apiErrorRes)
+        val apiError = ApiErrorRes(ex.message)
+        return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(apiError)
     }
 }

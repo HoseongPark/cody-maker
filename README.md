@@ -47,7 +47,7 @@
 
 ### 결과
 
-![Untitled](Cody%20Maker%20ef634657662b4b48bb02fdcdde6177d5/Untitled.png)
+![test](https://github.com/user-attachments/assets/599690ca-7280-498f-90af-3dc43e4f59cd)
 
 - 하단 Build Successful 확인이 되면 테스트 완료.
 
@@ -62,7 +62,7 @@
 
 ### 결과
 
-![Untitled](Cody%20Maker%20ef634657662b4b48bb02fdcdde6177d5/Untitled%201.png)
+![buid](https://github.com/user-attachments/assets/5c68aaab-c911-42bf-86b2-c82683dddbc4)
 
 - 하단 Build Successful 확인이 되면  빌드 완료.
 
@@ -77,7 +77,7 @@
 
 ### 결과
 
-![Untitled](Cody%20Maker%20ef634657662b4b48bb02fdcdde6177d5/Untitled%202.png)
+![run](https://github.com/user-attachments/assets/140068fc-8634-4be5-a85a-81506220f44c)
 
 - 18080 port 기반 Spring Boot Application 실행이되면 완료
 

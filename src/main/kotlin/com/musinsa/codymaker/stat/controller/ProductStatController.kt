@@ -4,6 +4,7 @@ import com.musinsa.codymaker.product.domain.model.Category
 import com.musinsa.codymaker.stat.controller.model.BrandMinPriceProductStatRes
 import com.musinsa.codymaker.stat.controller.model.CategoryMinPriceProductStatRes
 import com.musinsa.codymaker.stat.controller.model.CategoryProductStatRes
+import com.musinsa.codymaker.stat.controller.swagger.ProductStatSwagger
 import com.musinsa.codymaker.stat.service.BrandMinPriceProductStatService
 import com.musinsa.codymaker.stat.service.CategoryMinPriceProductStatService
 import com.musinsa.codymaker.stat.service.CategoryProductStatService
@@ -19,10 +20,10 @@ class ProductStatController(
     private val productCategoryStatSvc: CategoryProductStatService,
     private val brandProductStatSvc: BrandMinPriceProductStatService,
     private val categoryMinPriceStatSvc: CategoryMinPriceProductStatService
-) {
+) : ProductStatSwagger {
 
     @GetMapping("/category-price")
-    fun getCategoryPriceStat(@RequestParam category: Category): ResponseEntity<CategoryProductStatRes> {
+    override fun getCategoryPriceStat(@RequestParam category: Category): ResponseEntity<CategoryProductStatRes> {
         val productStat = productCategoryStatSvc.getStat(category)
 
         val response = CategoryProductStatRes.from(productStat)
@@ -31,7 +32,7 @@ class ProductStatController(
     }
 
     @GetMapping("/brand-product")
-    fun getBrandProductStat(@RequestParam brandName: String): ResponseEntity<BrandMinPriceProductStatRes> {
+    override fun getBrandProductStat(@RequestParam brandName: String): ResponseEntity<BrandMinPriceProductStatRes> {
         val productStat = brandProductStatSvc.getStat(brandName)
 
         val response = BrandMinPriceProductStatRes.from(productStat)
@@ -40,7 +41,7 @@ class ProductStatController(
     }
 
     @GetMapping("/category-min-price")
-    fun getCategoryMinPriceStat(): ResponseEntity<CategoryMinPriceProductStatRes> {
+    override fun getCategoryMinPriceStat(): ResponseEntity<CategoryMinPriceProductStatRes> {
         val productStat = categoryMinPriceStatSvc.getStat()
 
         val response = CategoryMinPriceProductStatRes.from(productStat)

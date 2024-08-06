@@ -1,6 +1,6 @@
 package com.musinsa.codymaker.common.exception
 
-import com.musinsa.codymaker.util.datetime.getUtcNow
+import com.musinsa.codymaker.common.utils.getUtcNow
 import java.time.LocalDateTime
 
 data class ApiErrorRes(

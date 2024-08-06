@@ -1,6 +1,6 @@
 package com.musinsa.codymaker.common.model
 
-import com.musinsa.codymaker.util.datetime.getUtcNow
+import com.musinsa.codymaker.common.utils.getUtcNow
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType.IDENTITY
